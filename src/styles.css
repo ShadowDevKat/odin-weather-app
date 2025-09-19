@@ -21,21 +21,41 @@
 }
 
 body {
-  background-color: var(--color-bg);
   height: 100dvh;
   overflow: hidden;
+
+  background-color: var(--color-bg);
 }
 
 #content {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    font-size: 2rem;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 8rem auto;
 }
 
 .user-input {
-    margin: auto;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+  grid-row: span 1;
+
+  background-color: var(--color-primary);
+}
+
+#search-form {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+#search-form > * {
+  padding: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.info-container {
+  padding: 1rem;
+  font-size: 2rem;
+
+  background-color: var(--color-secondary);
 }
