@@ -2,7 +2,9 @@ import "./styles.css";
 
 const searchForm = document.querySelector("#search-form");
 const displayDiv = document.querySelector(".info-container");
-const toggle = document.querySelector(".unit-toggle");
+const unitToggle = document.querySelector(".unit-toggle");
+let currentUnit = "C";
+let currentData = null;
 
 searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -12,16 +14,17 @@ searchForm.addEventListener("submit", (e) => {
     searchForm.reset();
 });
 
-toggle.addEventListener("click", (e) => {
-  const clicked = e.target.closest(".option");
-  if (!clicked) return;
+unitToggle.addEventListener("click", (e) => {
+    const clicked = e.target.closest(".option");
+    if (!clicked) return;
 
-  toggle.dataset.unit = clicked.dataset.value;
-  toggle.querySelectorAll(".option").forEach(opt =>
-    opt.classList.toggle("active", opt === clicked)
-  );
+    unitToggle.dataset.unit = clicked.dataset.value;
+    unitToggle.querySelectorAll(".option").forEach(opt =>
+        opt.classList.toggle("active", opt === clicked)
+    );
 
-  // here you can trigger unit conversion using toggle.dataset.unit ("C" or "F")
+    currentUnit = unitToggle.dataset.unit;
+    if(currentData) renderData(currentData);
 });
 
 
@@ -39,10 +42,9 @@ async function getWeatherData(location) {
         }
 
         const weatherData = await response.json();
-        // console.log("Weather data: ", weatherData);
 
-        const formattedData = processData(weatherData);
-        renderData(formattedData);
+        currentData = processData(weatherData);
+        renderData(currentData);
 
     } catch (error) {
         console.error("Failed to get weather data");
@@ -80,30 +82,34 @@ function processData(data) {
 }
 
 function renderData(data) {
-    // Metric
-    displayDiv.innerHTML = `
-    <img src=${data.condition.icon}><br>
-    Condition: ${data.condition.text}<br>
-    Temperature: ${data.currentTemp.metric}&deg;C<br>
-    Feels Like: ${data.feelsLike.metric}&deg;C<br>
-    Wind: ${data.windSpeed.metric} km/h<br>
-    Humidity: ${data.humidity}%<br>
-    Location: ${data.region}, ${data.country}<br>
-    `;
 
-    // Imperial
-    displayDiv.innerHTML = `
-    <img src=${data.condition.icon}><br>
-    Condition: ${data.condition.text}<br>
-    Temperature: ${data.currentTemp.imperial}&deg;F<br>
-    Feels Like: ${data.feelsLike.imperial}&deg;F<br>
-    Wind: ${data.windSpeed.imperial} mp/h<br>
-    Humidity: ${data.humidity}%<br>
-    Location: ${data.region}, ${data.country}<br>
-    `;
+    const weatherIcon = displayDiv.querySelector(".weather-icon");
+    const condition = displayDiv.querySelector(".condition");
+    const location = displayDiv.querySelector(".location");
+    const temperature = displayDiv.querySelector(".temperature");
+    const feel = displayDiv.querySelector(".feel");
+    const wind = displayDiv.querySelector(".wind");
+    const humidity = displayDiv.querySelector(".humidity");
+
+    weatherIcon.setAttribute("src", data.condition.icon);
+    condition.textContent = data.condition.text;
+    location.textContent = `${data.region}, ${data.country}`;
+    humidity.textContent = `Humidity: ${data.humidity}%`;
+    if (currentUnit === "C") {
+        temperature.innerHTML = `${data.currentTemp.metric}<sup>&deg;C</sup>`;
+        feel.innerHTML = `Feels Like: ${data.feelsLike.metric}<sup>&deg;C</sup>`;
+        wind.textContent = `Wind: ${data.windSpeed.metric} KMH`;
+    } else {
+        temperature.innerHTML = `${data.currentTemp.imperial}<sup>&deg;F</sup>`;
+        feel.innerHTML = `Feels Like: ${data.feelsLike.imperial}<sup>&deg;F</sup>`;
+        wind.textContent = `Wind: ${data.windSpeed.imperial} MPH`;
+    }
+
 }
 
 function fetchWeather(location) {
     const input = location.trim();
     getWeatherData(input);
 }
+
+fetchWeather("Manila");
