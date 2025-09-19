@@ -82,7 +82,6 @@ function processData(data) {
 }
 
 function renderData(data) {
-
     const weatherIcon = displayDiv.querySelector(".weather-icon");
     const condition = displayDiv.querySelector(".condition");
     const location = displayDiv.querySelector(".location");
