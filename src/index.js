@@ -2,6 +2,7 @@ import "./styles.css";
 
 const searchForm = document.querySelector("#search-form");
 const displayDiv = document.querySelector(".info-container");
+const toggle = document.querySelector(".unit-toggle");
 
 searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -11,7 +12,22 @@ searchForm.addEventListener("submit", (e) => {
     searchForm.reset();
 });
 
-async function getWeatherData(location = "China") {
+toggle.addEventListener("click", (e) => {
+  const clicked = e.target.closest(".option");
+  if (!clicked) return;
+
+  toggle.dataset.unit = clicked.dataset.value;
+  toggle.querySelectorAll(".option").forEach(opt =>
+    opt.classList.toggle("active", opt === clicked)
+  );
+
+  // here you can trigger unit conversion using toggle.dataset.unit ("C" or "F")
+});
+
+
+async function getWeatherData(location) {
+    if (!location) return;
+
     const apiKey = "299c515348484e4db1795648251909";
     const url = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}`;
 
@@ -23,7 +39,7 @@ async function getWeatherData(location = "China") {
         }
 
         const weatherData = await response.json();
-        console.log("Weather data: ", weatherData);
+        // console.log("Weather data: ", weatherData);
 
         const formattedData = processData(weatherData);
         renderData(formattedData);

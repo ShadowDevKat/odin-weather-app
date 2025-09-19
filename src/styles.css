@@ -14,8 +14,17 @@
 
   /* Accent */
   --color-primary: #3b82f6;
+  --color-primary-dark: #2563eb;
   --color-secondary: #8b5cf6;
   --color-accent: #f59e0b;
+
+  /* Filters */
+  --filter-white: invert(100%) sepia(99%) saturate(0%) hue-rotate(197deg)
+    brightness(105%) contrast(100%);
+  --filter-black: invert(0%) sepia(100%) saturate(0%) hue-rotate(253deg)
+    brightness(107%) contrast(103%);
+
+  /* Font */
   font-family: Roboto, sans-serif;
   color: var(--color-text);
 }
@@ -24,19 +33,16 @@ body {
   height: 100dvh;
   overflow: hidden;
 
-  background-color: var(--color-bg);
+  background-color: var(--color-surface);
 }
 
 #content {
   height: 100%;
   display: grid;
-  grid-template-rows: 8rem auto;
-}
-
-.user-input {
-  grid-row: span 1;
-
-  background-color: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #search-form {
@@ -44,18 +50,165 @@ body {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 1rem;
-  padding: 2rem;
+  padding: 1.5rem 2rem;
 }
 
-#search-form > * {
-  padding: 0.5rem;
-  font-size: 1.5rem;
+.search-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+}
+
+#location-input {
+  width: 100%;
+  padding: 0.75rem 3rem 0.75rem 1rem;
+  font-size: 1.1rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 2rem;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  outline: none;
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+#location-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+#location-input:focus {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+#search-btn {
+  height: 100%;
+  width: 3rem;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  border: none;
+  border-radius: 2rem;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-primary);
+  transition: transform 0.2s ease;
+}
+#search-btn:hover {
+  background-color: var(--color-primary-dark);
+}
+
+#search-btn img {
+  width: 20px;
+  height: 20px;
+  filter: var(--filter-white);
+  transition: transform 0.2s ease;
+  pointer-events: none;
+}
+
+#search-btn:hover img {
+  transform: scale(1.1);
 }
 
 .info-container {
+  height: max-content;
+  width: 100%;
   padding: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-size: 2rem;
+}
 
-  background-color: var(--color-secondary);
+.weather-card {
+  position: relative;
+  background: var(--color-primary);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 2rem;
+  padding: 1.5rem;
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  text-transform: uppercase;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.weather-icon {
+  width: 64px;
+  height: 64px;
+}
+
+.condition {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.location {
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.temperature {
+  font-size: 4.5rem;
+  text-align: center;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-transform: none;
+  font-variant: small-caps;
+}
+
+sup {
+  font-size: 0.6em;
+  vertical-align: text-top;
+  line-height: 1;
+}
+
+.unit-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 2rem;
+  overflow: hidden;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  user-select: none;
+}
+
+.unit-toggle .option {
+  padding: 0.4rem 0.8rem;
+  color: #ddd;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.unit-toggle .option.active {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
 }
